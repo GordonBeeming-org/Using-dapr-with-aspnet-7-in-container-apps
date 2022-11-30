@@ -13,7 +13,12 @@ public class Secrets2Controller : ControllerBase
 
   public Secrets2Controller(IConfiguration configuration)
   {
-    this.secretClient = new SecretClient(new Uri(configuration["keyVaultUrl"]!), new DefaultAzureCredential());
+    this.secretClient = new SecretClient(new Uri(configuration["keyVaultUrl"]!), new DefaultAzureCredential(new DefaultAzureCredentialOptions
+    {
+#if !DEBUG
+      ManagedIdentityClientId = "9032a945-d6c5-434d-9d61-87ee011f8ec1", // Can be set as environment variable AZURE_CLIENT_ID
+#endif
+    }));
     Configuration = configuration;
   }
 
